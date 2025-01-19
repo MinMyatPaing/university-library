@@ -14,7 +14,7 @@ const {
 
 const authenticator = async () => {
   try {
-    const response = await fetch(`${config.env.apiEndpoint}/api/auth/imagekit`);
+    const response = await fetch(`${config.env.apiEndpoint}/api/imagekit`);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -30,6 +30,8 @@ const authenticator = async () => {
 
     return { token, signature, expire };
   } catch (error: any) {
+    console.log(error.message);
+
     throw new Error(`Authentication request failed: ${error.message}`);
   }
 };

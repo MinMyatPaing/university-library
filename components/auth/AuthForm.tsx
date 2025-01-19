@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { ZodType } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   DefaultValues,
   FieldValues,
@@ -10,20 +9,23 @@ import {
   useForm,
   UseFormReturn,
 } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { ZodType } from "zod";
+
+import { Button } from "@/components/ui/button";
 import {
+  Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-  Form,
-  FormControl,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
-import { Button } from "../ui/button";
 import Link from "next/link";
-import FileUpload from "../FileUpload";
+import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
+import FileUpload from "@/components/FileUpload";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface Props<T extends FieldValues> {
   schema: ZodType<T>;
@@ -39,13 +41,34 @@ const AuthForm = <T extends FieldValues>({
   onSubmit,
 }: Props<T>) => {
   const isSignIn = type === "SIGN_IN";
+  const router = useRouter();
 
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>,
   });
 
-  const handleSubmit: SubmitHandler<T> = async (data) => {};
+  const handleSubmit: SubmitHandler<T> = async (data) => {
+    console.log("Submitting");
+
+    const result = await onSubmit(data);
+
+    if (result.success) {
+      toast({
+        title: "Success",
+        description: isSignIn
+          ? "You have successfully signed in."
+          : "You have successfully signed up.",
+      });
+      router.push("/");
+    } else {
+      toast({
+        title: `Error ${isSignIn ? "signing in" : "signing up"}`,
+        description: result.error ?? "An error occurred.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -71,7 +94,7 @@ const AuthForm = <T extends FieldValues>({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="capitalize text-light-100">
-                    {FIELD_NAMES[field.name as keyof typeof FIELD_TYPES]}
+                    {FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}
                   </FormLabel>
 
                   <FormControl className="text-light-100">
@@ -103,7 +126,7 @@ const AuthForm = <T extends FieldValues>({
         {isSignIn ? "New to BookWise? " : " Already have an account? "}
 
         <Link
-          href={isSignIn ? "/sign-up" : "sign-in"}
+          href={isSignIn ? "/sign-up" : "/sign-in"}
           className="font-bold text-primary"
         >
           {isSignIn ? "Create an account" : "Sign in"}
