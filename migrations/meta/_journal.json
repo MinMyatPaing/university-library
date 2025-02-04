@@ -8,6 +8,13 @@
       "when": 1737241470575,
       "tag": "0000_volatile_leo",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1738495189378,
+      "tag": "0001_hesitant_exiles",
+      "breakpoints": true
     }
   ]
 }
