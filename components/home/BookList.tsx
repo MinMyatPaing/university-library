@@ -1,5 +1,5 @@
 import React from "react";
-import BookCard from "./BookCard";
+import BookCard from "@/components/home/BookCard";
 
 interface Props {
   title: string;
@@ -22,5 +22,4 @@ const BookList = ({ title, books, containerClassName }: Props) => {
     </section>
   );
 };
-
 export default BookList;

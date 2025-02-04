@@ -15,6 +15,13 @@
       "when": 1738495189378,
       "tag": "0001_hesitant_exiles",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1738669746176,
+      "tag": "0002_silent_shockwave",
+      "breakpoints": true
     }
   ]
 }
